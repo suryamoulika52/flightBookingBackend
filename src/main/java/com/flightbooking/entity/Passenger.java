@@ -1,14 +1,14 @@
 package com.flightbooking.entity;
 
 import jakarta.persistence.*;
-
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
+
 @Entity
-@Table(name="passengers")
+@Table(name = "passengers")
 public class Passenger {
 
     @Id
@@ -23,64 +23,84 @@ public class Passenger {
     private String email;
 
     @NotBlank(message = "Phone is required")
-    @Pattern(regexp = "^[0-9]{10}$", message = "Phone must contain exactly 10 digits")
+    @Pattern(
+        regexp = "^[0-9]{10}$",
+        message = "Phone must contain exactly 10 digits"
+    )
     private String phone;
 
     @NotNull(message = "Age is required")
-    @Min(value = 1, message = "Age must be greater than 0")
+    @Min(
+        value = 1,
+        message = "Age must be greater than 0"
+    )
     private Integer age;
 
     @NotBlank(message = "Gender is required")
     private String gender;
 
-	public Long getId() {
-		return id;
-	}
+    // Soft delete field
+    @Column(nullable = false)
+    private boolean active = true;
 
-	public void setId(Long id) {
-		this.id = id;
-	}
 
-	public String getName() {
-		return name;
-	}
+    // =========================
+    // Getters and Setters
+    // =========================
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public Long getId() {
+        return id;
+    }
 
-	public String getEmail() {
-		return email;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public void setEmail(String email) {
-		this.email = email;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public String getPhone() {
-		return phone;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public void setPhone(String phone) {
-		this.phone = phone;
-	}
+    public String getEmail() {
+        return email;
+    }
 
-	public Integer getAge() {
-		return age;
-	}
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
-	public void setAge(Integer age) {
-		this.age = age;
-	}
+    public String getPhone() {
+        return phone;
+    }
 
-	public String getGender() {
-		return gender;
-	}
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
 
-	public void setGender(String gender) {
-		this.gender = gender;
-	}
+    public Integer getAge() {
+        return age;
+    }
 
-    // Generate Getters, Setters,
-    // Constructors
+    public void setAge(Integer age) {
+        this.age = age;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
 }
