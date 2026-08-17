@@ -4,16 +4,23 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.flightbooking.entity.Booking;
 import com.flightbooking.entity.Passenger;
+import com.flightbooking.repository.BookingRepository;
 import com.flightbooking.repository.PassengerRepository;
 
 @Service
 public class PassengerService {
 
     private final PassengerRepository passengerRepository;
+    private final BookingRepository bookingRepository;
 
-    public PassengerService(PassengerRepository passengerRepository) {
+    public PassengerService(
+            PassengerRepository passengerRepository,
+            BookingRepository bookingRepository) {
+
         this.passengerRepository = passengerRepository;
+        this.bookingRepository = bookingRepository;
     }
 
     // Add Passenger
@@ -27,16 +34,18 @@ public class PassengerService {
     }
 
     // Get Passenger By Id
-   public Passenger getPassengerById(Long id) {
+    public Passenger getPassengerById(Long id) {
 
-    return passengerRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Passenger not found"));
-}
+        return passengerRepository.findById(id)
+                .orElseThrow(() ->
+                        new RuntimeException("Passenger not found"));
+    }
 
     // Update Passenger
     public Passenger updatePassenger(Long id, Passenger passenger) {
 
-        Passenger existingPassenger = passengerRepository.findById(id).orElse(null);
+        Passenger existingPassenger =
+                passengerRepository.findById(id).orElse(null);
 
         if (existingPassenger != null) {
 
@@ -54,6 +63,22 @@ public class PassengerService {
 
     // Delete Passenger
     public void deletePassenger(Long id) {
-        passengerRepository.deleteById(id);
+
+        Passenger passenger = passengerRepository.findById(id)
+                .orElseThrow(() ->
+                        new RuntimeException("Passenger not found"));
+
+        List<Booking> bookings =
+                bookingRepository.findByPassenger(passenger);
+
+        if (!bookings.isEmpty()) {
+
+            throw new RuntimeException(
+                    "Cannot delete passenger because this passenger has bookings. "
+                    + "Cancel the booking first."
+            );
+        }
+
+        passengerRepository.delete(passenger);
     }
 }
