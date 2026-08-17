@@ -8,14 +8,14 @@ import jakarta.validation.Valid;
 
 import com.flightbooking.entity.Passenger;
 import com.flightbooking.service.PassengerService;
-import org.springframework.web.bind.annotation.CrossOrigin;
+
 @CrossOrigin(origins = {
-	    "http://localhost:5173",
-	    "http://localhost:5176",
-	    "http://localhost:5174",
-	    "http://localhost:5175",
-	"https://flight-booking-frontend-psi.vercel.app"
-	})
+        "http://localhost:5173",
+        "http://localhost:5176",
+        "http://localhost:5174",
+        "http://localhost:5175",
+        "https://flight-booking-frontend-psi.vercel.app"
+})
 @RestController
 @RequestMapping("/api/passengers")
 public class PassengerController {
@@ -26,25 +26,38 @@ public class PassengerController {
         this.passengerService = passengerService;
     }
 
+    // =========================
     // Add Passenger
+    // =========================
     @PostMapping
-    public Passenger addPassenger(@Valid @RequestBody Passenger passenger) {
+    public Passenger addPassenger(
+            @Valid @RequestBody Passenger passenger) {
+
         return passengerService.addPassenger(passenger);
     }
 
-    // Get All Passengers
+    // =========================
+    // Get Active Passengers
+    // =========================
     @GetMapping
     public List<Passenger> getAllPassengers() {
+
         return passengerService.getAllPassengers();
     }
 
+    // =========================
     // Get Passenger By Id
+    // =========================
     @GetMapping("/{id}")
-    public Passenger getPassengerById(@PathVariable Long id) {
+    public Passenger getPassengerById(
+            @PathVariable Long id) {
+
         return passengerService.getPassengerById(id);
     }
 
+    // =========================
     // Update Passenger
+    // =========================
     @PutMapping("/{id}")
     public Passenger updatePassenger(
             @PathVariable Long id,
@@ -53,10 +66,15 @@ public class PassengerController {
         return passengerService.updatePassenger(id, passenger);
     }
 
-    // Delete Passenger
+    // =========================
+    // Deactivate Passenger
+    // =========================
     @DeleteMapping("/{id}")
-    public String deletePassenger(@PathVariable Long id) {
+    public String deletePassenger(
+            @PathVariable Long id) {
+
         passengerService.deletePassenger(id);
-        return "Passenger Deleted Successfully";
+
+        return "Passenger deactivated successfully";
     }
 }
