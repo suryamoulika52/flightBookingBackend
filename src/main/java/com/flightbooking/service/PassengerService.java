@@ -62,23 +62,29 @@ public class PassengerService {
     }
 
     // Delete Passenger
-    public void deletePassenger(Long id) {
+ 
+public void deletePassenger(Long id) {
 
-        Passenger passenger = passengerRepository.findById(id)
-                .orElseThrow(() ->
-                        new RuntimeException("Passenger not found"));
+    Passenger passenger = passengerRepository.findById(id)
+            .orElseThrow(() ->
+                    new RuntimeException("Passenger not found"));
 
-        List<Booking> bookings =
-                bookingRepository.findByPassenger(passenger);
-
-        if (!bookings.isEmpty()) {
-
-            throw new RuntimeException(
-                    "Cannot delete passenger because this passenger has bookings. "
-                    + "Cancel the booking first."
+    // Check only ACTIVE/CONFIRMED bookings
+    List<Booking> activeBookings =
+            bookingRepository.findByPassengerAndStatus(
+                    passenger,
+                    "CONFIRMED"
             );
-        }
 
-        passengerRepository.delete(passenger);
+    if (!activeBookings.isEmpty()) {
+
+        throw new RuntimeException(
+                "Cannot delete passenger because this passenger has an active booking. "
+                + "Cancel the booking first."
+        );
     }
+
+    // Only cancelled bookings remain, so passenger can be deleted
+    passengerRepository.delete(passenger);
+}
 }
